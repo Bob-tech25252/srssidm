@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My HTML Playground & Repository Hub</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Inter Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              accent: '#38bdf8',
+              neon: '#a855f7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glow-effect:hover {
+      box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.4);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-brand-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i class="fa-solid font-mono text-xl text-white font-black">&lt;/&gt;</i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            HTML Learning Hub
+          </h1>
+          <p class="text-xs text-slate-400 font-mono">repo://learning-index.git</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <button onclick="openAddModal()" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-all duration-200 flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+          <i class="fa-solid fa-plus"></i>
+          <span class="hidden sm:inline">Add File</span>
+        </button>
+        
+        <button onclick="openExportModal()" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 transition-all duration-200 flex items-center space-x-2">
+          <i class="fa-solid fa-code"></i>
+          <span>Export Static HTML</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- KPI Stats & Progress Section -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="statsContainer">
+      <!-- Generated dynamically in JS -->
+    </section>
+
+    <!-- Navigation Tabs -->
+    <section class="border-b border-slate-800 flex items-center space-x-2 overflow-x-auto pb-1">
+      <button id="tabBtnFiles" onclick="switchTab('files')" class="px-4 py-2.5 text-sm font-semibold border-b-2 border-indigo-500 text-indigo-400 flex items-center space-x-2 transition-all">
+        <i class="fa-solid fa-folder-tree"></i>
+        <span>Repository Files</span>
+        <span id="tabFileCountBadge" class="ml-1 px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-300">0</span>
+      </button>
+      
+      <button id="tabBtnCheat" onclick="switchTab('cheat')" class="px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700 flex items-center space-x-2 transition-all">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>Tag Reference</span>
+      </button>
+      
+      <button id="tabBtnBoilerplate" onclick="switchTab('boilerplate')" class="px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700 flex items-center space-x-2 transition-all">
+        <i class="fa-solid fa-cubes"></i>
+        <span>Boilerplate Generator</span>
+      </button>
+    </section>
+
+    <div id="viewFiles" class="space-y-6">
+      
+      <!-- Filter Bar & Search -->
+      <div class="glass-card p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+        
+        <!-- Search Input -->
+        <div class="relative w-full md:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input type="text" id="searchInput" oninput="handleFilterChange()" placeholder="Search by name, path or tag..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <!-- Category Filter -->
+          <select id="categoryFilter" onchange="handleFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 flex-1 sm:flex-none">
+            <option value="ALL">All Categories</option>
+            <option value="Basics">Basics</option>
+            <option value="Typography & Text">Typography & Text</option>
+            <option value="Forms & Inputs">Forms & Inputs</option>
+            <option value="Layouts & Semantics">Layouts & Semantics</option>
+            <option value="Multimedia">Multimedia</option>
+            <option value="Projects">Projects</option>
+          </select>
+
+          <!-- Status Filter -->
+          <select id="statusFilter" onchange="handleFilterChange()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 flex-1 sm:flex-none">
+            <option value="ALL">All Statuses</option>
+            <option value="completed">Completed</option>
+            <option value="in-progress">In Progress</option>
+            <option value="planned">Planned</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- File Grid List -->
+      <div id="fileGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty State Container -->
+      <div id="emptyState" class="hidden glass-card p-12 text-center rounded-2xl border-dashed border-2 border-slate-800">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800 flex items-center justify-center text-slate-500">
+          <i class="fa-solid fa-folder-open text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-200">No files found</h3>
+        <p class="text-sm text-slate-400 mt-1">Try adjusting your search query or filters to discover matching practice files.</p>
+        <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-sm text-indigo-400 font-medium rounded-lg transition-colors">
+          Reset Filters
+        </button>
+      </div>
+    </div>
+
+    <div id="viewCheat" class="hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+              <i class="fa-solid fa-book text-indigo-400"></i> HTML5 Tag Cheat Sheet
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Essential elements, syntax structures, and quick-copy examples.</p>
+          </div>
+          <div class="relative w-full sm:w-64">
+            <input type="text" id="cheatSearch" oninput="renderCheatSheet()" placeholder="Search tag name..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <div id="cheatSheetGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <div id="viewBoilerplate" class="hidden space-y-6">
+      <div class="glass-card p-6 rounded-2xl space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <i class="fa-solid fa-cubes text-cyan-400"></i> HTML5 Boilerplate Generator
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Select a starting template to kickstart your next HTML practice file.</p>
+        </div>
+
+        <!-- Template Type Selectors -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button onclick="selectBoilerplate('standard')" id="btnTplStandard" class="tpl-btn border-2 border-indigo-500 bg-indigo-500/10 text-indigo-300 p-3 rounded-xl text-left font-medium text-xs sm:text-sm flex flex-col justify-between h-20 transition-all">
+            <i class="fa-solid fa-file-code text-lg mb-1"></i>
+            <span>Standard HTML5</span>
+          </button>
+          
+          <button onclick="selectBoilerplate('form')" id="btnTplForm" class="tpl-btn border border-slate-700 bg-slate-800/50 text-slate-400 hover:text-slate-200 p-3 rounded-xl text-left font-medium text-xs sm:text-sm flex flex-col justify-between h-20 transition-all">
+            <i class="fa-solid fa-list-check text-lg mb-1"></i>
+            <span>Form Template</span>
+          </button>
+          
+          <button onclick="selectBoilerplate('flexbox')" id="btnTplFlexbox" class="tpl-btn border border-slate-700 bg-slate-800/50 text-slate-400 hover:text-slate-200 p-3 rounded-xl text-left font-medium text-xs sm:text-sm flex flex-col justify-between h-20 transition-all">
+            <i class="fa-solid fa-border-all text-lg mb-1"></i>
+            <span>Flex Layout</span>
+          </button>
+
+          <button onclick="selectBoilerplate('article')" id="btnTplArticle" class="tpl-btn border border-slate-700 bg-slate-800/50 text-slate-400 hover:text-slate-200 p-3 rounded-xl text-left font-medium text-xs sm:text-sm flex flex-col justify-between h-20 transition-all">
+            <i class="fa-solid fa-newspaper text-lg mb-1"></i>
+            <span>Semantic Article</span>
+          </button>
+        </div>
+
+        <!-- Code Preview Box -->
+        <div class="relative bg-slate-950 border border-slate-800 rounded-xl overflow-hidden font-mono text-xs sm:text-sm">
+          <div class="flex items-center justify-between px-4 py-2.5 bg-slate-900/80 border-b border-slate-800">
+            <span class="text-slate-400 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span id="boilerplateTitle">standard-index.html</span>
+            </span>
+            <button onclick="copyBoilerplateCode(this)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs text-indigo-300 rounded font-sans transition-colors flex items-center gap-1.5">
+              <i class="fa-regular fa-copy"></i>
+              <span>Copy Code</span>
+            </button>
+          </div>
+          <pre id="boilerplateCode" class="p-4 overflow-x-auto text-slate-300 leading-relaxed min-h-[280px] max-h-[420px]">
+            <!-- Injected via JS -->
+          </pre>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="exportModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <i class="fa-solid fa-file-export text-cyan-400"></i> Generated Static index.html
+          </h3>
+          <p class="text-xs text-slate-400">Ready to copy and commit directly to GitHub Pages!</p>
+        </div>
+        <button onclick="closeExportModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Export Mode Switcher -->
+      <div class="px-6 py-3 bg-slate-950/50 border-b border-slate-800/60 flex items-center justify-between text-xs">
+        <span class="text-slate-400 font-medium">Export Format:</span>
+        <div class="flex space-x-2">
+          <button id="btnExportFull" onclick="setExportFormat('full')" class="px-3 py-1 rounded bg-indigo-600 text-white font-medium">Full Page HTML5</button>
+          <button id="btnExportList" onclick="setExportFormat('list')" class="px-3 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700">Simple Navigation Snippet (&lt;ul&gt;)</button>
+        </div>
+      </div>
+
+      <!-- Code Viewer -->
+      <div class="p-6 flex-1 overflow-y-auto">
+        <div class="relative bg-slate-950 border border-slate-800 rounded-xl overflow-hidden font-mono text-xs">
+          <pre id="exportedCode" class="p-4 text-slate-300 leading-relaxed overflow-x-auto select-all max-h-[380px]"></pre>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3">
+        <button onclick="closeExportModal()" class="px-4 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 font-medium">Close</button>
+        <button onclick="copyExportedHTML(this)" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm rounded-lg flex items-center gap-2 shadow-lg shadow-cyan-600/20">
+          <i class="fa-solid fa-copy"></i>
+          <span>Copy Static Code</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fileModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="fileModalTitle" class="text-lg font-bold text-slate-100">Add Repository File</h3>
+        <button onclick="closeFileModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="fileForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        <input type="hidden" id="fileId">
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">File Title</label>
+          <input type="text" id="inputTitle" required placeholder="e.g. Accessible Survey Form" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Relative Repository File Path</label>
+          <input type="text" id="inputPath" required placeholder="e.g. 02-forms/survey.html" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm font-mono text-slate-100 focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Category</label>
+            <select id="inputCategory" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+              <option value="Basics">Basics</option>
+              <option value="Typography & Text">Typography & Text</option>
+              <option value="Forms & Inputs">Forms & Inputs</option>
+              <option value="Layouts & Semantics">Layouts & Semantics</option>
+              <option value="Multimedia">Multimedia</option>
+              <option value="Projects">Projects</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Learning Status</label>
+            <select id="inputStatus" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+              <option value="completed">Completed</option>
+              <option value="in-progress">In Progress</option>
+              <option value="planned">Planned</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Tags (comma separated)</label>
+          <input type="text" id="inputTags" placeholder="e.g. form, validation, radio, inputs" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Description / Key Learnings</label>
+          <textarea id="inputDescription" rows="3" placeholder="Brief note on what this HTML practice file demonstrates..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex justify-end space-x-3">
+          <button type="button" onclick="closeFileModal()" class="px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-lg font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-lg shadow-lg shadow-indigo-600/30">Save File Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center">
+      <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto text-xl">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-100">Delete Repository File?</h3>
+      <p class="text-xs text-slate-400">Are you sure you want to remove this record from your index? This action cannot be undone.</p>
+      
+      <div class="flex space-x-3 pt-2">
+        <button onclick="closeDeleteModal()" class="flex-1 py-2 text-sm text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-lg font-medium">Cancel</button>
+        <button id="confirmDeleteBtn" class="flex-1 py-2 text-sm text-white bg-rose-600 hover:bg-rose-500 rounded-lg font-semibold shadow-lg shadow-rose-600/20">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-10 opacity-0 transition-all duration-300 bg-slate-800 text-slate-100 border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 pointer-events-none">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg" class="text-sm font-medium">Action successful</span>
+  </div>
+
+  <script>
+    const DEFAULT_FILES = [
+      {
+        id: '1',
+        title: 'Hello World & Basic Tags',
+        path: '01-basics/hello-world.html',
+        category: 'Basics',
+        status: 'completed',
+        description: 'First steps with HTML page skeleton, headings, paragraphs, and list elements.',
+        tags: ['headings', 'paragraphs', 'lists'],
+        dateAdded: '2026-09-10'
+      },
+      {
+        id: '2',
+        title: 'Interactive Survey Form',
+        path: '02-forms/survey.html',
+        category: 'Forms & Inputs',
+        status: 'completed',
+        description: 'Comprehensive input form with text fields, radio options, checkboxes, selects, and validation.',
+        tags: ['forms', 'inputs', 'select', 'validation'],
+        dateAdded: '2026-09-12'
+      },
+      {
+        id: '3',
+        title: 'Weekly Schedule Table',
+        path: '03-tables/schedule.html',
+        category: 'Layouts & Semantics',
+        status: 'in-progress',
+        description: 'Practicing table structures, table headers, colspans, rowspans, and cell styling.',
+        tags: ['table', 'thead', 'tbody', 'colspan'],
+        dateAdded: '2026-09-15'
+      },
+      {
+        id: '4',
+        title: 'Semantic Blog Article',
+        path: '04-semantic/blog.html',
+        category: 'Layouts & Semantics',
+        status: 'completed',
+        description: 'Building modern page structure with article, section, nav, header, footer, and aside elements.',
+        tags: ['semantic', 'article', 'aside', 'nav'],
+        dateAdded: '2026-09-18'
+      },
+      {
+        id: '5',
+        title: 'Audio & Video Media Gallery',
+        path: '05-multimedia/media-gallery.html',
+        category: 'Multimedia',
+        status: 'planned',
+        description: 'Embedding responsive HTML5 video, custom audio player tags, figure captions, and iframe embeds.',
+        tags: ['video', 'audio', 'iframe', 'figure'],
+        dateAdded: '2026-09-20'
+      },
+      {
+        id: '6',
+        title: 'Developer Portfolio Capstone',
+        path: '06-projects/portfolio.html',
+        category: 'Projects',
+        status: 'in-progress',
+        description: 'Capstone project binding all learned HTML concepts into a complete multi-section personal site.',
+        tags: ['project', 'portfolio', 'capstone'],
+        dateAdded: '2026-09-21'
+      }
+    ];
+
+    const CHEAT_ITEMS = [
+      { tag: '<a>', cat: 'Links', desc: 'Defines a hyperlink targeting web pages, relative files, or email anchors.', snippet: '<a href="about.html" target="_blank" rel="noopener">About Me</a>' },
+      { tag: '<form>', cat: 'Forms', desc: 'Container for form input elements, actions, and submission buttons.', snippet: '<form action="/submit" method="POST">\n  <label for="usr">User:</label>\n  <input type="text" id="usr" name="user" required>\n  <button type="submit">Submit</button>\n</form>' },
+      { tag: '<nav>', cat: 'Semantics', desc: 'Defines navigation links block for main navigation menus.', snippet: '<nav>\n  <ul>\n    <li><a href="#home">Home</a></li>\n    <li><a href="#about">About</a></li>\n  </ul>\n</nav>' },
+      { tag: '<picture>', cat: 'Multimedia', desc: 'Provides responsive image loading based on screen resolution query media rules.', snippet: '<picture>\n  <source srcset="hero-large.webp" media="(min-width: 768px)">\n  <img src="hero-small.jpg" alt="Responsive Hero">\n</picture>' },
+      { tag: '<table>', cat: 'Data', desc: 'Renders structured two-dimensional tabular data with rows and columns.', snippet: '<table class="table">\n  <thead>\n    <tr><th>Item</th><th>Price</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>HTML Book</td><td>$0</td></tr>\n  </tbody>\n</table>' },
+      { tag: '<details>', cat: 'Interactive', desc: 'Interactive widget that toggles open or closed to reveal additional details.', snippet: '<details>\n  <summary>Click to reveal answer</summary>\n  <p>HTML stands for HyperText Markup Language!</p>\n</details>' }
+    ];
+
+    const BOILERPLATES = {
+      standard: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My HTML Practice Page</title>
+</head>
+<body>
+
+  <header>
+    <h1>Welcome to My Practice Page</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Section Title</h2>
+      <p>Hello! This is a clean standard HTML5 starting template.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 HTML Learner. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>`,
+
+      form: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Form Practice</title>
+</head>
+<body>
+
+  <h2>User Registration Form</h2>
+  
+  <form action="#" method="POST">
+    <div>
+      <label for="fullname">Full Name:</label>
+      <input type="text" id="fullname" name="fullname" required placeholder="John Doe">
+    </div>
+
+    <div>
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" required placeholder="john@example.com">
+    </div>
+
+    <div>
+      <label for="experience">Experience Level:</label>
+      <select id="experience" name="experience">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="comments">Comments:</label>
+      <textarea id="comments" name="comments" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Form</button>
+  </form>
+
+</body>
+</html>`,
+
+      flexbox: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Layout Example</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+    header { background: #1e293b; color: white; padding: 1rem; }
+    .container { display: flex; flex: 1; }
+    aside { width: 220px; background: #f1f5f9; padding: 1rem; }
+    main { flex: 1; padding: 1.5rem; }
+    footer { background: #0f172a; color: white; padding: 1rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Site Header</h1>
+  </header>
+
+  <div class="container">
+    <aside>
+      <h3>Sidebar Nav</h3>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </aside>
+
+    <main>
+      <h2>Main Workspace Area</h2>
+      <p>Content resizes dynamically with the browser window.</p>
+    </main>
+  </div>
+
+  <footer>
+    <p>Sticky Layout Footer</p>
+  </footer>
+
+</body>
+</html>`,
+
+      article: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semantic Blog Article</title>
+</head>
+<body>
+
+  <article>
+    <header>
+      <h1>Understanding HTML5 Semantic Tag Structure</h1>
+      <p>Published on <time datetime="2026-09-22">September 22, 2026</time> by <strong>HTML Learner</strong></p>
+    </header>
+
+    <section>
+      <h2>Why Semantics Matter</h2>
+      <p>Semantic tags give meaning to webpage content for accessibility screen readers and search engines.</p>
+    </section>
+
+    <blockquote cite="https://w3.org">
+      "Accessibility is essential for developers and businesses that want to create high-quality websites."
+    </blockquote>
+
+    <footer>
+      <p>Tags: <a href="#">#html</a> <a href="#">#webdev</a></p>
+    </footer>
+  </article>
+
+</body>
+</html>`
+    };
+
+    let files = [];
+    let currentExportFormat = 'full';
+    let fileToDeleteId = null;
+
+    function initApp() {
+      const stored = localStorage.getItem('html_repo_hub_files');
+      if (stored) {
+        try {
+          files = JSON.parse(stored);
+        } catch (e) {
+          files = [...DEFAULT_FILES];
+        }
+      } else {
+        files = [...DEFAULT_FILES];
+        saveFilesToStorage();
+      }
+
+      renderStats();
+      renderFiles();
+      renderCheatSheet();
+      selectBoilerplate('standard');
+    }
+
+    function saveFilesToStorage() {
+      localStorage.setItem('html_repo_hub_files', JSON.stringify(files));
+    }
+
+    function renderStats() {
+      const container = document.getElementById('statsContainer');
+      const total = files.length;
+      const completed = files.filter(f => f.status === 'completed').length;
+      const inProgress = files.filter(f => f.status === 'in-progress').length;
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+      container.innerHTML = `
+        <div class="glass-card p-4 rounded-xl flex items-center space-x-4 border-l-4 border-indigo-500">
+          <div class="p-3 bg-indigo-500/10 rounded-lg text-indigo-400">
+            <i class="fa-solid fa-folder text-xl"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Files</p>
+            <h4 class="text-2xl font-bold text-slate-100">${total}</h4>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl flex items-center space-x-4 border-l-4 border-emerald-500">
+          <div class="p-3 bg-emerald-500/10 rounded-lg text-emerald-400">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Completed</p>
+            <h4 class="text-2xl font-bold text-slate-100">${completed} <span class="text-xs text-slate-400 font-normal">(${pct}%)</span></h4>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl flex items-center space-x-4 border-l-4 border-amber-500">
+          <div class="p-3 bg-amber-500/10 rounded-lg text-amber-400">
+            <i class="fa-solid fa-spinner text-xl"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">In Progress</p>
+            <h4 class="text-2xl font-bold text-slate-100">${inProgress}</h4>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl flex items-center space-x-4 border-l-4 border-cyan-500">
+          <div class="p-3 bg-cyan-500/10 rounded-lg text-cyan-400">
+            <i class="fa-solid fa-fire text-xl"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Learning Streak</p>
+            <h4 class="text-2xl font-bold text-slate-100">7 Days 🔥</h4>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('tabFileCountBadge').textContent = total;
+    }
+
+    function renderFiles() {
+      const grid = document.getElementById('fileGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('categoryFilter').value;
+      const stat = document.getElementById('statusFilter').value;
+
+      const filtered = files.filter(file => {
+        const matchesSearch = file.title.toLowerCase().includes(search) || 
+                              file.path.toLowerCase().includes(search) ||
+                              (file.tags && file.tags.some(t => t.toLowerCase().includes(search)));
+        
+        const matchesCat = (cat === 'ALL') || (file.category === cat);
+        const matchesStat = (stat === 'ALL') || (file.status === stat);
+
+        return matchesSearch && matchesCat && matchesStat;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(file => {
+        let statusBadge = '';
+        if (file.status === 'completed') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i class="fa-solid fa-check text-[9px] mr-1"></i>Completed</span>`;
+        } else if (file.status === 'in-progress') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20"><i class="fa-solid fa-clock text-[9px] mr-1"></i>In Progress</span>`;
+        } else {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-700/50 text-slate-300 border border-slate-600/30"><i class="fa-solid fa-bookmark text-[9px] mr-1"></i>Planned</span>`;
+        }
+
+        const tagsHTML = (file.tags || []).map(t => 
+          `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px] font-mono">#${t.trim()}</span>`
+        ).join(' ');
+
+        return `
+          <div class="glass-card rounded-xl p-5 flex flex-col justify-between hover:border-slate-600 transition-all duration-200 glow-effect group relative">
+            
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-800 text-indigo-300 border border-indigo-500/20">
+                  ${file.category}
+                </span>
+                ${statusBadge}
+              </div>
+
+              <div>
+                <h3 class="font-bold text-slate-100 group-hover:text-indigo-300 transition-colors">${file.title}</h3>
+                <p class="font-mono text-xs text-cyan-400/90 mt-1 flex items-center gap-1.5 truncate">
+                  <i class="fa-regular fa-file-code"></i>
+                  <span>${file.path}</span>
+                </p>
+              </div>
+
+              <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                ${file.description || 'No description added.'}
+              </p>
+            </div>
+
+            <div class="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1">
+                ${tagsHTML}
+              </div>
+
+              <div class="flex items-center space-x-1.5">
+                <a href="${file.path}" target="_blank" title="Open html file in new tab" class="p-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600 hover:text-white text-slate-400 transition-colors text-xs">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <button onclick="openEditModal('${file.id}')" title="Edit Record" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors text-xs">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button onclick="confirmDelete('${file.id}')" title="Delete File" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-600 hover:text-white text-slate-400 transition-colors text-xs">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleFilterChange() {
+      renderFiles();
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = 'ALL';
+      document.getElementById('statusFilter').value = 'ALL';
+      renderFiles();
+    }
+
+    function switchTab(tab) {
+      const views = {
+        files: document.getElementById('viewFiles'),
+        cheat: document.getElementById('viewCheat'),
+        boilerplate: document.getElementById('viewBoilerplate')
+      };
+
+      const btns = {
+        files: document.getElementById('tabBtnFiles'),
+        cheat: document.getElementById('tabBtnCheat'),
+        boilerplate: document.getElementById('tabBtnBoilerplate')
+      };
+
+      Object.keys(views).forEach(k => {
+        if (k === tab) {
+          views[k].classList.remove('hidden');
+          btns[k].className = "px-4 py-2.5 text-sm font-semibold border-b-2 border-indigo-500 text-indigo-400 flex items-center space-x-2 transition-all";
+        } else {
+          views[k].classList.add('hidden');
+          btns[k].className = "px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700 flex items-center space-x-2 transition-all";
+        }
+      });
+    }
+
+    function renderCheatSheet() {
+      const query = (document.getElementById('cheatSearch')?.value || '').toLowerCase();
+      const container = document.getElementById('cheatSheetGrid');
+
+      const items = CHEAT_ITEMS.filter(item => 
+        item.tag.toLowerCase().includes(query) || 
+        item.desc.toLowerCase().includes(query) ||
+        item.cat.toLowerCase().includes(query)
+      );
+
+      container.innerHTML = items.map(item => `
+        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-sm font-bold text-cyan-400 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-800/40">${item.tag}</span>
+            <span class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">${item.cat}</span>
+          </div>
+          <p class="text-xs text-slate-300">${item.desc}</p>
+          <div class="relative bg-slate-900 rounded p-2.5 font-mono text-[11px] text-slate-300 overflow-x-auto border border-slate-800">
+            <pre>${escapeHtml(item.snippet)}</pre>
+            <button onclick="copySnippetText(\`${escapeHtml(item.snippet)}\`, this)" class="absolute top-2 right-2 text-xs text-slate-400 hover:text-indigo-300 bg-slate-800 p-1 rounded">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectBoilerplate(type) {
+      document.querySelectorAll('.tpl-btn').forEach(btn => {
+        btn.className = "tpl-btn border border-slate-700 bg-slate-800/50 text-slate-400 hover:text-slate-200 p-3 rounded-xl text-left font-medium text-xs sm:text-sm flex flex-col justify-between h-20 transition-all";
+      });
+
+      const activeBtn = {
+        standard: 'btnTplStandard',
+        form: 'btnTplForm',
+        flexbox: 'btnTplFlexbox',
+        article: 'btnTplArticle'
+      }[type];
+
+      if (document.getElementById(activeBtn)) {
+        document.getElementById(activeBtn).className = "tpl-btn border-2 border-indigo-500 bg-indigo-500/10 text-indigo-300 p-3 rounded-xl text-left font-medium text-xs sm:text-sm flex flex-col justify-between h-20 transition-all";
+      }
+
+      const titles = {
+        standard: 'standard-template.html',
+        form: 'form-template.html',
+        flexbox: 'flexbox-layout.html',
+        article: 'semantic-article.html'
+      };
+
+      document.getElementById('boilerplateTitle').textContent = titles[type];
+      document.getElementById('boilerplateCode').textContent = BOILERPLATES[type];
+    }
+
+    function copyBoilerplateCode(btn) {
+      const code = document.getElementById('boilerplateCode').textContent;
+      copyToClipboard(code);
+      showToast("Boilerplate code copied to clipboard!");
+    }
+
+    function openAddModal() {
+      document.getElementById('fileModalTitle').textContent = "Add Repository File";
+      document.getElementById('fileForm').reset();
+      document.getElementById('fileId').value = '';
+      document.getElementById('fileModal').classList.remove('hidden');
+    }
+
+    function openEditModal(id) {
+      const file = files.find(f => f.id === id);
+      if (!file) return;
+
+      document.getElementById('fileModalTitle').textContent = "Edit Repository File";
+      document.getElementById('fileId').value = file.id;
+      document.getElementById('inputTitle').value = file.title;
+      document.getElementById('inputPath').value = file.path;
+      document.getElementById('inputCategory').value = file.category;
+      document.getElementById('inputStatus').value = file.status;
+      document.getElementById('inputTags').value = (file.tags || []).join(', ');
+      document.getElementById('inputDescription').value = file.description || '';
+
+      document.getElementById('fileModal').classList.remove('hidden');
+    }
+
+    function closeFileModal() {
+      document.getElementById('fileModal').classList.add('hidden');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('fileId').value;
+      const title = document.getElementById('inputTitle').value.trim();
+      const path = document.getElementById('inputPath').value.trim();
+      const category = document.getElementById('inputCategory').value;
+      const status = document.getElementById('inputStatus').value;
+      const tagsStr = document.getElementById('inputTags').value;
+      const description = document.getElementById('inputDescription').value.trim();
+
+      const tags = tagsStr.split(',').map(t => t.trim()).filter(Boolean);
+
+      if (id) {
+        // Edit existing
+        const index = files.findIndex(f => f.id === id);
+        if (index !== -1) {
+          files[index] = { ...files[index], title, path, category, status, tags, description };
+          showToast("File record updated!");
+        }
+      } else {
+        // Add new
+        const newFile = {
+          id: Date.now().toString(),
+          title,
+          path,
+          category,
+          status,
+          tags,
+          description,
+          dateAdded: new Date().toISOString().split('T')[0]
+        };
+        files.unshift(newFile);
+        showToast("New file added to repository index!");
+      }
+
+      saveFilesToStorage();
+      renderStats();
+      renderFiles();
+      closeFileModal();
+    }
+
+    function confirmDelete(id) {
+      fileToDeleteId = id;
+      document.getElementById('deleteModal').classList.remove('hidden');
+      document.getElementById('confirmDeleteBtn').onclick = () => {
+        deleteFile(fileToDeleteId);
+        closeDeleteModal();
+      };
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.add('hidden');
+      fileToDeleteId = null;
+    }
+
+    function deleteFile(id) {
+      files = files.filter(f => f.id !== id);
+      saveFilesToStorage();
+      renderStats();
+      renderFiles();
+      showToast("File removed from index.");
+    }
+
+    function openExportModal() {
+      generateExportedHTML();
+      document.getElementById('exportModal').classList.remove('hidden');
+    }
+
+    function closeExportModal() {
+      document.getElementById('exportModal').classList.add('hidden');
+    }
+
+    function setExportFormat(fmt) {
+      currentExportFormat = fmt;
+      document.getElementById('btnExportFull').className = fmt === 'full' ? 'px-3 py-1 rounded bg-indigo-600 text-white font-medium' : 'px-3 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700';
+      document.getElementById('btnExportList').className = fmt === 'list' ? 'px-3 py-1 rounded bg-indigo-600 text-white font-medium' : 'px-3 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700';
+      generateExportedHTML();
+    }
+
+    function generateExportedHTML() {
+      const codeElem = document.getElementById('exportedCode');
+
+      if (currentExportFormat === 'list') {
+        const listHTML = `<nav class="html-repository-nav">
+  <h2>Learning Repository Index</h2>
+  <ul>
+${files.map(f => `    <li>
+      <a href="${f.path}">${f.title}</a> 
+      <span class="status status-${f.status}">(${f.status})</span>
+    </li>`).join('\n')}
+  </ul>
+</nav>`;
+        codeElem.textContent = listHTML;
+        return;
+      }
+
+      // Group files by category
+      const categories = {};
+      files.forEach(f => {
+        if (!categories[f.category]) categories[f.category] = [];
+        categories[f.category].push(f);
+      });
+
+      let categoryBlocks = '';
+      for (const [cat, list] of Object.entries(categories)) {
+        categoryBlocks += `
+    <section class="category-group">
+      <h2>${cat}</h2>
+      <ul>
+${list.map(f => `        <li>
+          <a href="${f.path}">${f.title}</a>
+          <span class="badge ${f.status}">${f.status}</span>
+          <p>${f.description || ''}</p>
+        </li>`).join('\n')}
+      </ul>
+    </section>\n`;
+      }
+
+      const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My HTML Learning Repository</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --accent: #38bdf8;
+      --border: #334155;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      line-height: 1.5;
+    }
+    h1 { color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+    h2 { color: #a78bfa; margin-top: 1.5rem; font-size: 1.25rem; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: var(--card-bg);
+      margin-bottom: 0.75rem;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    li a { color: var(--accent); font-weight: 600; text-decoration: none; font-size: 1.1rem; }
+    li a:hover { text-decoration: underline; }
+    li p { margin: 0.5rem 0 0; font-size: 0.875rem; color: #94a3b8; }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      float: right;
+    }
+    .completed { background: #064e3b; color: #34d399; }
+    .in-progress { background: #78350f; color: #fbbf24; }
+    .planned { background: #374151; color: #9ca3af; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚀 My HTML Learning Repository Index</h1>
+    <p>Collection of HTML practice files, mini-projects, and exercises.</p>
+  </header>
+
+  <main>
+${categoryBlocks}  </main>
+
+  <footer>
+    <p style="text-align: center; color: #64748b; font-size: 0.8rem; margin-top: 3rem;">
+      Generated via HTML Learning Hub & Repository Manager
+    </p>
+  </footer>
+
+</body>
+</html>`;
+
+      codeElem.textContent = fullHTML;
+    }
+
+    function copyExportedHTML(btn) {
+      const text = document.getElementById('exportedCode').textContent;
+      copyToClipboard(text);
+      showToast("Static HTML copied to clipboard!");
+    }
+
+    function copySnippetText(text, btn) {
+      copyToClipboard(text);
+      showToast("Snippet copied!");
+    }
+
+    function copyToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Fallback copy failed', err);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+
+      toast.classList.remove('translate-y-10', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-10', 'opacity-0');
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+
+</body>
+</html>
