@@ -3,30 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table</title>
+    <title>Multi-Day Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        /* Style for the Date Header banner */
+        .date-header {
+            background-color: #d0e1fd;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+        /* Style for the column titles */
+        .column-header {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
-  <thead>
-    <tr style="background-color: #f2f2f2;">
-      <th style="padding: 10px; border: 1px solid #ccc; text-align: left;">Oct 2nd</th>
-      <th style="padding: 10px; border: 1px solid #ccc; text-align: left;"></th>
-      <th style="padding: 10px; border: 1px solid #ccc; text-align: left;"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ccc;">Started making this table</td>
-      <td style="padding: 10px; border: 1px solid #ccc;"></td>
-      <td style="padding: 10px; border: 1px solid #ccc;"></td>
-    </tr>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ccc;"></td>
-      <td style="padding: 10px; border: 1px solid #ccc;"></td>
-      <td style="padding: 10px; border: 1px solid #ccc;"></td>
-    </tr>
-  </tbody>
-</table>
+
+    <table>
+        <thead>
+            <!-- COLUMN TITLES: Change column names here -->
+            <tr class="column-header">
+                <th>Task / Activity</th>
+                <th>Notes</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <!-- =======================================================
+             DAY 1: OCT 2ND
+             ======================================================= -->
+        <tbody>
+            <!-- Date Banner: 'colspan="3"' stretches this cell across all 3 columns -->
+            <tr class="date-header">
+                <td colspan="3">Oct 2nd</td>
+            </tr>
+            
+            <!-- Row 1 for Oct 2nd -->
+            <tr>
+                <td>Started making this table</td> <!-- Cell 1: Task -->
+                <td>Initial HTML structure</td>   <!-- Cell 2: Notes -->
+                <td>Done</td>                     <!-- Cell 3: Status -->
+            </tr>
+            
+            <!-- Row 2 for Oct 2nd -->
+            <tr>
+                <td>Worked on Github and set stuff up</td>
+                <td>Made a new reposatory</td>
+                <td>Done</td>
+            </tr>
+
+            <!-- TO ADD A NEW ROW TO THIS DAY: 
+                 Copy from <tr> to </tr> above and paste it directly here -->
+        </tbody>
+
+        <!-- =======================================================
+             DAY 2: OCT 3RD
+             ======================================================= -->
+        <tbody>
+            <!-- Date Banner for Day 2 -->
+            <tr class="date-header">
+                <td colspan="3">Date pending</td>
+            </tr>
+            
+            <!-- Row 1 -->
+            <tr>
+                <td>Review project notes</td>
+                <td>Prepare agenda for meeting</td>
+                <td>In Progress</td>
+            </tr>
+            
+            <!-- Row 2 -->
+            <tr>
+                <td>Update status table</td>
+                <td>Add notes and layout guide</td>
+                <td>Pending</td>
+            </tr>
+        </tbody>
+
+        <!-- TO ADD A NEW DAY:
+             Copy an entire <tbody>...</tbody> block above and paste it right here -->
+
+    </table>
 
 </body>
 </html>
